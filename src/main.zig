@@ -1,24 +1,44 @@
-const std = @import("std");
+const uefi = @import("std").os.uefi;
 
-pub fn main() !void {
-    // Prints to stderr (it's a shortcut based on `std.io.getStdErr()`)
-    std.debug.print("All your {s} are belong to us.\n", .{"codebase"});
+// The actual entry point is EfiMain. EfiMain takes two parameters, the
+// EFI image's handle and the EFI system table, and writes them to
+// uefi.handle and uefi.system_table, respectively. The EFI system table
+// contains function pointers to access EFI facilities.
+//
+// main() can return void or usize.
+pub fn main() void {
+    // uefi.system_table.con_out is a pointer to a structure that implements
+    // uefi.protocols.SimpleTextOutputProtocol that is associated with the
+    // active console output device.
+    const con_out = uefi.system_table.con_out.?;
 
-    // stdout is for the actual output of your application, for example if you
-    // are implementing gzip, then only the compressed bytes should be sent to
-    // stdout, not any debugging messages.
-    const stdout_file = std.io.getStdOut().writer();
-    var bw = std.io.bufferedWriter(stdout_file);
-    const stdout = bw.writer();
+    // Clear screen. reset() returns usize(0) on success, like most
+    // EFI functions. reset() can also return something else in case a
+    // device error occurs, but we're going to ignore this possibility now.
+    _ = con_out.reset(false);
 
-    try stdout.print("Run `zig build test` to run the tests.\n", .{});
+    // EFI uses UCS-2 encoded null-terminated strings. UCS-2 encodes
+    // code points in exactly 16 bit. Unlike UTF-16, it does not support all
+    // Unicode code points.
+    _ = con_out.outputString(&[_:0]u16{ 'H', 'e', 'l', 'l', 'o', ',', ' ' });
+    _ = con_out.outputString(&[_:0]u16{ 'w', 'o', 'r', 'l', 'd', '\r', '\n' });
+    // EFI uses \r\n for line breaks (like Windows).
 
-    try bw.flush(); // don't forget to flush!
-}
+    // Boot services are EFI facilities that are only available during OS
+    // initialization, i.e. before your OS takes over full control over the
+    // hardware. Among these are functions to configure events, allocate
+    // memory, load other EFI images, and access EFI protocols.
+    const boot_services = uefi.system_table.boot_services.?;
+    // There are also Runtime services which are available during normal
+    // OS operation.
 
-test "simple test" {
-    var list = std.ArrayList(i32).init(std.testing.allocator);
-    defer list.deinit(); // try commenting this out and see if zig detects the memory leak!
-    try list.append(42);
-    try std.testing.expectEqual(@as(i32, 42), list.pop());
+    // uefi.system_table.con_out and uefi.system_table.boot_services should be
+    // set to null after you're done initializing everything. Until then, we
+    // don't need to worry about them being inaccessible.
+
+    // Wait 5 seconds.
+    _ = boot_services.stall(5 * 1000 * 1000);
+
+    // If main()'s type is void, EfiMain will return usize(0). On return,
+    // control is transferred back to the calling EFI image.
 }
