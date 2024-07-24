@@ -5,10 +5,7 @@ const CrossTarget = std.zig.CrossTarget;
 const builtin = @import("builtin");
 
 pub fn build(b: *std.Build) void {
-    const target = .{
-        .query = .{},
-        .result = .{},
-    };
+    const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
     const exe = b.addExecutable(.{
