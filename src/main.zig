@@ -5,5 +5,5 @@ export fn _start() callconv(.Naked) noreturn {
 }
 
 pub fn main() void {
-    while (true) { }
+    while (true) {}
 }

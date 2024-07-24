@@ -14,6 +14,6 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
         .target = target,
     });
-    
+
     b.installArtifact(exe);
 }

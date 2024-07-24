@@ -11,7 +11,10 @@
       let
         overlays =
           [ (final: prev: { zigpkgs = zig.packages.${prev.system}; }) ];
-        pkgs = import nixpkgs { inherit system overlays; };
+        pkgs = import nixpkgs {
+          inherit system overlays;
+          config.allowUnsupportedSystem = true;
+        };
         treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
       in
       {
