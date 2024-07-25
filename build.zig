@@ -9,7 +9,7 @@ pub fn build(b: *std.Build) void {
     const optimize = b.standardOptimizeOption(.{});
 
     const exe = b.addExecutable(.{
-        .name = "bootx64",
+        .name = "XRNIX",
         .root_source_file = b.path("src/main.zig"),
         .optimize = optimize,
         .target = target,
