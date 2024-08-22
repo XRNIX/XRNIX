@@ -13,4 +13,4 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixos-unstable
       - name: Run nix flake check
-        run: nix flake check --all-systems --impure
+        run: nix flake check --all-systems
