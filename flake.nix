@@ -12,7 +12,23 @@
           inherit system;
           config.allowUnsupportedSystem = true;
         };
+        stdenv = pkgs.stdenv;
         treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
+        xrnix = stdenv.mkDerivation {
+          pname = "xrnix";
+          version = "dev";
+
+          src = ./.;
+
+          nativeBuildInputs = [
+            pkgs.zig_0_13.hook
+          ];
+
+          zigBuildFlags = [
+            "-Doptimize=Debug"
+            "-Dtarget=aarch64-freestanding"
+          ];
+        };
       in
       {
         # Use `nix fmt`
@@ -20,6 +36,12 @@
 
         # Use `nix flake check`
         checks.formatting = treefmtEval.config.build.check self;
+
+        # nix build .
+        packages = {
+          inherit xrnix;
+          default = xrnix;
+        };
 
         devShells.default = pkgs.mkShell {
           nativeBuildInputs = with pkgs; [
