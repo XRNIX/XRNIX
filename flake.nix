@@ -45,7 +45,10 @@
         formatter = treefmtEval.config.build.wrapper;
 
         # Use `nix flake check`
-        checks.formatting = treefmtEval.config.build.check self;
+        checks = {
+          inherit xrnix runner;
+          formatting = treefmtEval.config.build.check self;
+        };
 
         # nix build .
         packages = {
