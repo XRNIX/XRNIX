@@ -34,7 +34,7 @@
 
             # LSP
             zls
-            nixd
+            nil
           ];
 
           shellHook = ''
