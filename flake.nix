@@ -6,11 +6,10 @@
   };
 
   outputs = { self, nixpkgs, flake-utils, treefmt-nix }:
-    flake-utils.lib.eachDefaultSystem (system:
+    flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" ] (system:
       let
         pkgs = import nixpkgs {
           inherit system;
-          config.allowUnsupportedSystem = true;
         };
         stdenv = pkgs.stdenv;
         treefmtEval = treefmt-nix.lib.evalModule pkgs ./treefmt.nix;
