@@ -29,6 +29,16 @@
             "-Dtarget=aarch64-freestanding"
           ];
         };
+        runner = pkgs.writeShellApplication {
+          name = "runner";
+          runtimeInputs = [
+            pkgs.qemu_full
+          ];
+
+          text = ''
+            qemu-system-aarch64 -machine raspi4b -kernel ${xrnix}/bin/XRNIX
+          '';
+        };
       in
       {
         # Use `nix fmt`
@@ -39,8 +49,12 @@
 
         # nix build .
         packages = {
-          inherit xrnix;
+          inherit xrnix runner;
           default = xrnix;
+        };
+
+        apps.default = flake-utils.lib.mkApp {
+          drv = runner;
         };
 
         devShells.default = pkgs.mkShell {
