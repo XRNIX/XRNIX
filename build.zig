@@ -5,8 +5,15 @@ const CrossTarget = std.zig.CrossTarget;
 const builtin = @import("builtin");
 
 pub fn build(b: *std.Build) void {
-    const target = b.standardTargetOptions(.{});
-    const optimize = b.standardOptimizeOption(.{});
+    const target = b.standardTargetOptions(.{
+        .default_target = .{
+            .cpu_arch = Target.Cpu.Arch.aarch64,
+            .os_tag = Target.Os.Tag.freestanding,
+        },
+    });
+    const optimize = b.standardOptimizeOption(.{
+        .preferred_optimize_mode = std.builtin.OptimizeMode.Debug,
+    });
 
     const exe = b.addExecutable(.{
         .name = "XRNIX",
