@@ -22,6 +22,12 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .code_model = .tiny,
     });
+    kernel.setLinkerScript(.{
+        .src_path = .{
+            .owner = b,
+            .sub_path = "src/linker.ld",
+        },
+    });
 
     b.installArtifact(kernel);
 }
