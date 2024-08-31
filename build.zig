@@ -15,12 +15,13 @@ pub fn build(b: *std.Build) void {
         .preferred_optimize_mode = std.builtin.OptimizeMode.Debug,
     });
 
-    const exe = b.addExecutable(.{
-        .name = "XRNIX",
+    const kernel = b.addExecutable(.{
+        .name = "XRNIX.elf",
         .root_source_file = b.path("src/main.zig"),
         .optimize = optimize,
         .target = target,
+        .code_model = .tiny,
     });
 
-    b.installArtifact(exe);
+    b.installArtifact(kernel);
 }
