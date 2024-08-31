@@ -24,7 +24,7 @@
           ];
 
           zigBuildFlags = [
-            "-Doptimize=Debug"
+            "-Drelease=false"
             "-Dtarget=aarch64-freestanding"
           ];
         };
