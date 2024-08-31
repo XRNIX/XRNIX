@@ -35,7 +35,7 @@
           ];
 
           text = ''
-            qemu-system-aarch64 -machine raspi4b -kernel ${xrnix}/bin/XRNIX
+            qemu-system-aarch64 -machine raspi4b -kernel ${xrnix}/bin/XRNIX.elf
           '';
         };
       in
