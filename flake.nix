@@ -24,8 +24,8 @@
           ];
 
           zigBuildFlags = [
-            "-Drelease=false"
-            "-Dtarget=aarch64-freestanding"
+            "-Doptimize=Debug"
+            "-Dtarget=riscv32-freestanding"
           ];
         };
         runner = pkgs.writeShellApplication {
@@ -35,7 +35,7 @@
           ];
 
           text = ''
-            qemu-system-aarch64 -machine raspi4b -kernel ${xrnix}/bin/XRNIX.elf
+            qemu-system-riscv32 -kernel ${xrnix}/bin/XRNIX.elf -bios none
           '';
         };
       in
