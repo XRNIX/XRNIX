@@ -70,6 +70,9 @@
             # LSP
             zls
             nil
+
+            # LLVM tools
+            libllvm
           ];
 
           shellHook = ''
